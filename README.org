@@ -63,6 +63,9 @@ plot(p, title="VÃ¡rios jogos de 1000 coin-flips", xlabel="EstratÃ©gia, aposta 10
 savefig("estrategia-moeda-viciada.png")
 #+end_src
 
+#+ATTR_HTML: :width 1000px
+[[file:outputs/estrategia-moeda-viciada.png::‰PNG]]
+
 ** Using Julia to Simulate the /expected-value of the growth rate coefficient/
 
 #+begin_src julia
@@ -94,4 +97,13 @@ plot(p1,p2,p3)
 savefig("expectativa.png")
 plot(p2)
 #+end_src
+
+#+ATTR_HTML: :width 1000px
+[[file:outputs/expectativa.png::‰PNG]]
+
 ** Using Julia to Simulate Probability of Ruin
+* TODO Monte Carlo
+TODO: Comments about integrals with Monte Carlo and the method itself.
+
+#+ATTR_HTML: :width 1000px
+[[file:outputs/montecarlo.png::‰PNG]]
