@@ -1,8 +1,10 @@
 #+title: Notes
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX: \newcommand{\binomial}[2]{\genfrac{(}{)}{0pt}{}{#1}{#2}}
 
 #+begin_src emacs-lisp
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
-#+end_src
+
 
 * Kelly Criterion
 ** Bias coin-toss
@@ -107,3 +109,126 @@ TODO: Comments about integrals with Monte Carlo and the method itself.
 
 #+ATTR_HTML: :width 1000px
 [[file:outputs/montecarlo.png::‰PNG]]
+* Exercises
+Book: Y. A. Rozanov, Probability Theory - A concise course
+** Julia functions for solving the execies
+*** Binomial, or Combination of =x=, by =y=
+#+begin_src julia
+function C(x,y)
+    return factorial(x)/(factorial(y)*factorial(x-n))
+end
+#+end_src
+
+#+RESULTS:
+: C
+
+** 1.1
+#+begin_quote
+A four-volume work is placed in random order on a bookshelf. What is the
+probability of the volumes being in proper order from left to right or from
+right to left?
+#+end_quote
+
+*** Answer
+The $(b_1, b_2, b_3, b_4)$, 4-tuple is the space we are dealing in.
+
+There are $N=4!$ combinations possible for this space. And, only two that
+benefits us, that is, in order of volumes from right to left, and left to right.
+
+Therefore, the probability of these events happening randomly is:
+
+\begin{equation}
+\begin{aligned}
+P(A) &= \dfrac{N(A)}{N} \\
+\Leftrightarrow P(A) &= \dfrac{2}{4!} \\
+\Leftrightarrow  P(A) &= \dfrac{1}{12} \\
+\therefore P(A) &= 0.0833
+\end{aligned}
+\end{equation}
+
+#+begin_src julia
+import Pkg; Pkg.add("CSV")
+import Pkg; Pkg.add("DataFrames")
+1/12
+#+end_src
+
+#+RESULTS:
+: 0.08333333333333333
+** 1.2
+#+begin_quote
+A wooden cube with painted faces is sawed up into 1000 little cubes, all of the
+same size. The little cubes are then mixed up, and one is chosen at random
+What is the probability of its having just 2 painted faces?
+
+Ans: 0.096
+#+end_quote
+
+*** Answer
+The space of colored sawed-cubes come all from the border of the former wooden
+cube (supposedly). The inner sawed-cubes parts aren't painted.
+
+Then, the cubes that only have two colors, must come from the edges of the cube,
+but not from it's vertices - which would have three color-faces.
+
+There are 12 edges; there are 8 vertices; each edge has 10 cubes, of which 8
+aren't vertices - because there are 1000 sawed-cubes, of same volume
+($\text{cubes} = 10*10*10$) and the two vertices in an edge are a cube of three
+colored face.
+
+Thus, the edge cubes that aren't vertices are: $(12 * 8)$.
+
+The total cubes are =1000=.
+
+$\therefore P(A) = 96/1000 \quad \leftrightarrow \quad P(A) = 0.096$
+** 1.3
+#+begin_quote
+A batch of *n* manufactured items contains *k* defective items. Suppose *m*
+items are selected at random from the batch. What is the probability that *l* of
+these items are defective?
+#+end_quote
+
+*** Answer
+
+- *n*: manufactured.
+- *k*: defected out of the *n* defected.
+- *m*: selection-size.
+- *l*: number of selected items, out of the *m* selected, which are defected.
+
+By =theorem 1.3=, given here, without proof (see the book for proof),
+#+begin_quote
+THEOREM 1.3.
+A population of n elements has precisely
+\begin{equation}
+\begin{aligned}
+C_r^n = \dfrac{n!}{r!(n-r)!}
+\end{aligned}
+\end{equation}
+subpopulations of size r < n.
+#+end_quote
+
+So, your total number of combinations m-selections is exactly the =binomial
+coeficient= $N=C_{m}^{n}$, or $\genfrac{(}{)}{0pt}{}{n}{k}$.
+
+The total of combination of m-selections, in which =l= are defected, follows from:
+- =l= of those =m=-selected are defected.
+- There are =k= defected in the population.
+- $l-m$ of the selected are not defected, and they come from the $n-m$ population of non-defected.
+
+Thus, the number of possible combinations of selecting =l= from =m=, which are
+defected can be numbered by: multiplying the combination =l=-selected from =k=
+population, and the combination of (=l-m=)-selected from the (=n-m=) population.
+
+$\therefore N(A)=C_{l}^{k} * C_{l-m}^{n-m}$
+
+Finally, the probability of this event happening is:
+$P(A)=\dfrac{N(A)}{N} \, \Leftrightarrow \, P(A)=\dfrac{C_{l}^{k} * C_{l-m}^{n-m}}{C_m^n}$
+
+** Execise 1.4
+#+begin_quote
+Ten books are placed in random order on a bookshelf. Find the probability
+of three given books being side by side.
+
+Ans: \dfrac{1}{15}
+#+end_quote
+
+*** TODO Answer
