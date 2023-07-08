@@ -223,7 +223,7 @@ $\therefore N(A)=C_{l}^{k} * C_{l-m}^{n-m}$
 Finally, the probability of this event happening is:
 $P(A)=\dfrac{N(A)}{N} \, \Leftrightarrow \, P(A)=\dfrac{C_{l}^{k} * C_{l-m}^{n-m}}{C_m^n}$
 
-** Execise 1.4
+** 1.4
 #+begin_quote
 Ten books are placed in random order on a bookshelf. Find the probability
 of three given books being side by side.
@@ -231,4 +231,64 @@ of three given books being side by side.
 Ans: \dfrac{1}{15}
 #+end_quote
 
-*** TODO Answer
+*** Answer
+**** Theorem of possible placements of books in a shelf (=BLW:1.1=)
+Proof by /Induction/.
+
+If we think of, for example, 4 books in total, and we take the first 3 to be our
+side-by-side group. They could be the first three, or the last three. That is,
+(4-3)+1 possible placements.
+
+If that's true for =n-1= books, and =m= that we want side-by-side, that is:
+((n-1)-m)+1. e.i., =n-m= placements, side-by-side, not-regarded of order. Then, if
+we have =n+1= books.
+
+Let's say the =n=-ith book in the shelf is not one of our =m= books (and, implicitly
+assumed, is in the end of the shelf).
+
+Then, we will have one more slot we can swap the =m= books further, with this new
+book. Furthermore, the previous =(n-m)= places are still there. Therefore, we will
+have =(n-m)+1= placements. QED.
+
+**** Answer /per-se/
+All possible arrangements are given by the factorial: $N=10!$
+
+There are 10-3+1, i.e., 8, places the three books can be put side by side, by [[*Theorem of possible placements of books in a shelf
+(=BLW:1.1=)][BLW:1.1]].
+
+For each 7 placements, there can be 3! possible displacements. Furthermore, for
+each of the possible combinations of side-by-side tree-books in a displacement,
+there are 7! combinations for the rest of the books. That is, $N(A)=8(3!)(7!)$,
+by =T1.1=, about the number of possible ordered-pairs.
+
+\begin{equation}
+\begin{aligned}
+\therefore P(A) &= \dfrac{N(A)}{N} \, \Leftrightarrow  \, P(A) = \dfrac{8(3!)(7!)}{10!}\\
+\therefore P(A) &= \dfrac{1}{15}
+\end{aligned}
+\end{equation}
+
+By Julia calculation:
+#+begin_src julia
+8*(factorial(3)*factorial(7))/(factorial(10))
+#+end_src
+
+#+RESULTS:
+: 0.06666666666666667
+
+#+begin_src julia
+1/15
+#+end_src
+
+#+RESULTS:
+: 0.06666666666666667
+
+**** Another shorter solution
+The number of possible subpopulations of the books is $C_3^{10}$. Out of these,
+we want exactly one of them.
+
+But, this subpopulation can be in (10-3)+1 possible displacements, by BLW:1.1.
+
+$\therefore P(A) = \dfrac{8}{C_3^{10}} \, \Leftrightarrow \, P(A) = \dfrac{8(3!)(7!)}{10!}$
+
+Thus, $P(A)=0.06667$, or $P(A)= \dfrac{1}{15}$.
