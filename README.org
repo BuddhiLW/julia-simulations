@@ -292,3 +292,131 @@ But, this subpopulation can be in (10-3)+1 possible displacements, by BLW:1.1.
 $\therefore P(A) = \dfrac{8}{C_3^{10}} \, \Leftrightarrow \, P(A) = \dfrac{8(3!)(7!)}{10!}$
 
 Thus, $P(A)=0.06667$, or $P(A)= \dfrac{1}{15}$.
+** 1.5
+#+begin_quote
+1. One marksman has an 80% probability of hitting a target, while another has only a
+70% probability of hitting the target. What is the probability of the target being hit (at least once) if both marksman fire at it simultaneously?
+#+end_quote
+
+*** Answer
+#+begin_quote
+The probability of the first marksman not hitting the target is 1 minus their
+probability of hitting the target, which is 1 - 0.8 = 0.2. Similarly, the
+probability of the second marksman not hitting the target is 1 - 0.7 = 0.3.
+
+Since the marksmen are firing simultaneously, we can multiply the probabilities
+together to find the probability of both marksmen missing the target: 0.2 * 0.3
+= 0.06.
+
+Finally, we subtract this probability from 1 to find the probability of the
+target being hit at least once: 1 - 0.06 = 0.94.
+
+Therefore, the probability of the target being hit (at least once) when both
+marksmen fire at it simultaneously is 0.94 or 94%.
+#+end_quote
+
+
+Mathematically, the change of both not hitting:
+\begin{equation}
+\begin{aligned}
+P(A \cup B) &= P(A) + P(B) - P(A \cap B) \\
+\implies P(A \cup B) &= 0.8 + 0.7 - 0.8*0.7 \\
+\therefore P(A \cup B) &= 0.94
+\end{aligned}
+\end{equation}
+
+Or,
+\begin{equation}
+\begin{aligned}
+1-\overline{P(A \cup B)} &= 1-(\overline{P(A)} \cap \overline{P(B)}) \\
+\implies 1-\overline{P(A \cup B)} &= 1 - (1-0.8) * (1-0.7) \\
+\therefore  \implies 1-\overline{P(A \cup B)} = 0.94
+\end{aligned}
+\end{equation}
+** 1.6
+#+begin_quote
+1. Suppose n people sit down at random and independently of each other in an
+   auditorium containing n + k seats. What is the probability that m seats
+   specified in advance (m < n) will be occupied?
+#+end_quote
+
+*** Answer
+**** ChatGPT (Wrong answer)
+#+begin_quote
+First, let's consider the total number of possible seating arrangements. There
+are (n + k) seats available and n people to be seated. The number of ways to
+arrange n people in (n + k) seats is given by the binomial coefficient, denoted
+as C(n + k, n) or (n + k choose n). This can be calculated as:
+
+C(n + k, n) = (n + k)! / (n! * k!)
+
+Next, let's consider the number of ways to choose m specified seats, which are
+the seats we want to be occupied. We can select m seats out of the available m +
+k seats in C(m + k, m) ways, which is given by:
+
+C(m + k, m) = (m + k)! / (m! * k!)
+
+Finally, to find the probability that exactly m specified seats are occupied, we
+divide the number of ways to have m occupied seats by the total number of
+possible seating arrangements:
+
+P(m seats occupied) = C(m + k, m) / C(n + k, n)
+
+Therefore, the probability that m specified seats will be occupied is C(m + k,
+m) / C(n + k, n).
+#+end_quote
+
+ChatGPT confuses itself in the following /reasoning/:
+#+begin_quote
+Next, let's consider the number of ways to choose m specified seats, which are
+the seats we want to be occupied. We can select m seats out of the available m +
+k seats in C(m + k, m) ways (...).
+#+end_quote
+
+**** Own answer
+We pre-arrange certain seats of =m=-size out of =n+k= available sits, in total a of =C(n+k, m)= arrangements.
+
+But, only one =m=-sized grouping is of interest, namely the one in which all the =m=
+pre-assigned sits are sit by a subgroup of =n= people. Furthermore, there are
+$\dfrac{n!}{m!}$ possible arrangements possible, for this =m=-sized group of sits
+of interest, which will be of *no concern*. Because, the possible ways to chose
+=C(n+k,n)= doesn't consider order.
+
+Still, we can still have =C(n-m+k, n-m)= possible fills of left-over placements.
+
+\begin{equation}
+\begin{aligned}
+\therefore P=\dfrac{C(n-m+k,\, n-m)}{C(n+k,n)}
+\end{aligned}
+\end{equation}
+
+#+begin_src julia
+function C(x,y)
+    return factorial(big(x))/(factorial(big(y))*factorial(big(x-y)))
+end
+function P(n,m,k)
+    return C(n-m+k, n-m)/C(n+k,n)
+end
+
+P(99,50,1)
+#+end_src
+
+#+RESULTS:
+: 0.5
+
+# NOTE:
+# (n, n-1, n-2, ..., n-m+1): =m=-tuple of sits and possible people sitting in each.
+
+# And, the remaining =(n-m)+k= sits can be occupied in =C(n-m+k, n-m)= ways.
+
+# The total number of ways of =n= people happen to sit in the =m= pre-assigned chairs is, therefore: $N(A) = \dfrac{n!}{m!} \times{} C(n-m+k,\m n-m)$.
+
+# The total number of ways of arranging =n= in =n+k= sits is =C(n+k,n)=.
+
+# \begin{equation}
+# \begin{aligned}
+# \implies P &= \dfrac{N(A)}{N} \\
+# \therefore P(n,\, m,\, k) &= \dfrac{\frac{n!}{m!} \times{} C(n-m+k,\m n-m)}{C(n+k,n)}
+# \end{aligned}
+# \end{equation}
+
