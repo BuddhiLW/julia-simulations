@@ -115,7 +115,7 @@ Book: Y. A. Rozanov, Probability Theory - A concise course
 *** Binomial, or Combination of =x=, by =y=
 #+begin_src julia
 function C(x,y)
-    return factorial(x)/(factorial(y)*factorial(x-n))
+    return factorial(x)/(factorial(y)*factorial(x-y))
 end
 #+end_src
 
@@ -335,9 +335,9 @@ Or,
 \end{equation}
 ** 1.6
 #+begin_quote
-1. Suppose n people sit down at random and independently of each other in an
-   auditorium containing n + k seats. What is the probability that m seats
-   specified in advance (m < n) will be occupied?
+Suppose n people sit down at random and independently of each other in an
+auditorium containing n + k seats. What is the probability that m seats
+specified in advance (m < n) will be occupied?
 #+end_quote
 
 *** Answer
@@ -374,15 +374,21 @@ k seats in C(m + k, m) ways (...).
 #+end_quote
 
 **** Own answer
+There are =C(n+k,n)= possible groups of sittings used by =n= people, in =n+k= sits.
+
 We pre-arrange certain seats of =m=-size out of =n+k= available sits, in total a of =C(n+k, m)= arrangements.
 
 But, only one =m=-sized grouping is of interest, namely the one in which all the =m=
 pre-assigned sits are sit by a subgroup of =n= people. Furthermore, there are
-$\dfrac{n!}{m!}$ possible arrangements possible, for this =m=-sized group of sits
+$\dfrac{n!}{m!}$ arrangements possible, for this =m=-sized group of sits
 of interest, which will be of *no concern*. Because, the possible ways to chose
 =C(n+k,n)= doesn't consider order.
 
-Still, we can still have =C(n-m+k, n-m)= possible fills of left-over placements.
+Still, we can still have =C(n-m+k, n-m)= possible grouping-of-fills of left-over placements.
+
+Thus, $N(A)=1*C(n-m+k, n-m)$ are the number of events of interest. I.e., =n=-grouped sittings of which =m= are pre-assigned out of =n+k= sits. And =n-m= left open to possible groupings, in =n-m+k= sits.
+
+And, $N=C(n+k,n)$ are the total arrangements of =n=-grouped sits.
 
 \begin{equation}
 \begin{aligned}
@@ -398,11 +404,46 @@ function P(n,m,k)
     return C(n-m+k, n-m)/C(n+k,n)
 end
 
-P(99,50,1)
+P(109,55,1)
 #+end_src
 
 #+RESULTS:
 : 0.5
+
+**** Notes
+if n+k, k=1 and $m=\frac{n+1}{2}$, $\forall(n,m)$. Then, $P(A) = \dfrac{1}{2}$
+
+\begin{equation}
+\begin{aligned}
+C(n-m+k,\, n-m) = \dfrac{(n-m+k)!}{[(n-m+k)-(n-m)]!(n-m)!}
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+P &= \dfrac{(n-m+k)! \times{} n!k!}{[(n-m+k)-(n-m)]!(n-m)! \times{} (n+k)!} \\
+\Leftrightarrow P &= \dfrac{(n-m+k)! \times{} n!k!}{k!(n-m)! \times{} (n+k)!}
+\end{aligned}
+\end{equation}
+
+Substituting =m=,
+\begin{equation}
+\begin{aligned}
+P = \dfrac{(\frac{n+2k-1}{2})! \times{} n!k!}{(k! (\frac{n-1}{2}))! \times{} (n+k)!}
+\end{aligned}
+\end{equation}
+
+Substituting =k=1=
+\begin{equation}
+\begin{aligned}
+P &= \dfrac{(\frac{n+1}{2})! \times{} n!}{(\frac{n-1}{2})! \times{} (n+1)!}\\
+\implies P &= \dfrac{(\frac{n+1}{2})!}{(\frac{n-1}{2})! \times{} (n+1)} \\
+\implies P &= \dfrac{(\frac{n+1}{2})(\frac{n-1}{2})!}{(\frac{n-1}{2})! \times{} (n+1)}\\
+\implies P &= \dfrac{(\frac{n+1}{2})}{(n+1)} \\
+\implies P &= \dfrac{(n+1)}{2\times(n+1)} \\
+\therefore P &= \dfrac{1}{2} \quad,  \forall(n,m)
+\end{aligned}
+\end{equation}
 
 # NOTE:
 # (n, n-1, n-2, ..., n-m+1): =m=-tuple of sits and possible people sitting in each.
@@ -419,4 +460,94 @@ P(99,50,1)
 # \therefore P(n,\, m,\, k) &= \dfrac{\frac{n!}{m!} \times{} C(n-m+k,\m n-m)}{C(n+k,n)}
 # \end{aligned}
 # \end{equation}
+** 1.7
+#+begin_quote
+Three cards are drawn at random from a full deck. What is the probability of
+getting a three, a seven and an ace?
+#+end_quote
 
+*** Answer
+In a deck, there are 4 threes, sevens and aces. And a total of 52 cards. $4^3$
+groupings constituting one of these three cards. And, a total of =C(52,3)=
+possible groupings.
+
+\begin{equation}
+\begin{aligned}
+P(A) &= \dfrac{N(A)}{N} \\
+\implies P(A) &= \dfrac{4^3}{C(52,\, 3)} \\
+\implies P(A) &= \dfrac{3!(4^3)}{52!51!50!}
+\end{aligned}
+\end{equation}
+
+#+begin_src julia
+function C(x,y)
+    return factorial(big(x))/(factorial(big(y))*factorial(big(x-y)))
+end
+
+(factorial(3)*4^3)/(52*51*50)
+#+end_src
+
+#+RESULTS:
+: 0.0028959276018099547
+
+$\therefore\, P(A)=0.290\%$
+
+*** Notes 1
+The total combination, with order, of possible three cards being draw is:
+#+begin_src julia
+52*51*50
+#+end_src
+
+#+RESULTS:
+: 132600
+
+If we consider 12 cards - any of the threes, sevens and aces. Then, either two of
+them. Finally, the final one, of the three kinds of cards. There are in total,
+384 possible arrangements of these draws.
+#+begin_src julia
+12*8*4
+#+end_src
+
+#+RESULTS:
+: 384
+
+The same can be accounted, if we think of the possible groupings of the three
+kinds, of which exist four elements of each type - in total: $4^3$.
+
+Finally, there are $3!$ possible arrangements - with order - of these groupins.
+
+Again, we get 384 possible arrangements of these draws.
+
+#+begin_src julia
+factorial(3)*4^3
+#+end_src
+
+#+RESULTS:
+: 384
+
+We also can think of only possible groupins $4^3$ which expresses our
+objective-event. Thinking in the same domain, of groupins - without order - we
+have $C(52,3)$ possible kinds of groupings of three cards, out of 52 cards of a
+deck.
+
+This gives us the same probabily-value: $\dfrac{4^3}{C(52,3)}=\dfrac{3!(4^3)}{52*51*50}$
+*** TODO Notes 2
+#+begin_src julia
+((factorial(3)*4^3)/(52*51*50)) / (1/(12*11*10))
+#+end_src
+
+#+RESULTS:
+: 3.82262443438914
+
+#+begin_src julia
+((factorial(4)*4^4)/(52*51*50*49)) / (1/(16*16*15*14))
+#+end_src
+
+#+RESULTS:
+: 50.835940530058174
+
+** 1.8
+#+begin_quote
+What is the probability of being able to form a triangle from three segments
+chosen at random from five line segments of lengths 1, 3, 5, 7 and 9?
+#+end_quote
