@@ -1,0 +1,33 @@
+#+title: Notes
+
+
+* Cunny Edge Detection
+** Try one
+#+begin_src julia
+using Images, FileIO
+using Images, ImageEdgeDetection, Noise
+using ImageEdgeDetection: Percentile
+# using Plots  # ImageInTerminal
+using ImageView, MosaicViews, ImageCore, ImageShow, TestImages, ColorVectorSpace
+# specify the path to your local image file
+img_path = "./img1.png"
+img = load(img_path)
+
+# # backends such as ImageMagick are required
+img2 = testimage("mandrill")
+
+imshow(mosaicview(img, img2; nrow=1))
+
+
+
+alg = Canny(spatial_scale=1, high=Percentile(80), low=Percentile(20))
+
+edges = detect_edges(img, alg)
+imshow(mosaicview(img, edges; nrow=1))
+save("Cunny-1.png", mosaicview(img, edges; nrow=1),)
+#+end_src
+** Try two
+
+#+begin_src julia
+
+#+end_src

@@ -546,8 +546,10 @@ This gives us the same probabily-value: $\dfrac{4^3}{C(52,3)}=\dfrac{3!(4^3)}{52
 #+RESULTS:
 : 50.835940530058174
 
-** 1.8
+** TODO 1.8
 #+begin_quote
 What is the probability of being able to form a triangle from three segments
 chosen at random from five line segments of lengths 1, 3, 5, 7 and 9?
 #+end_quote
+
+*** Answer
